@@ -5,8 +5,6 @@
 #include <opencv2/videoio.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/video.hpp>
-
-#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 Texture::Texture(const std::string& fileName) : id(0), buffer(nullptr), width(0), height(0), BPP(0)
@@ -37,29 +35,44 @@ Texture::Texture(const std::string& fileName) : id(0), buffer(nullptr), width(0)
     }
 }
 
-Texture::Texture(cv::Mat image) {
+Texture::Texture(cv::Mat mat)
+    : id(0), t_Buffer(nullptr),
+    width(0), height(0), BPP(4) // Assuming 4 bytes per pixel (RGBA)
+{
+    // flips texture vertically. Bottom left of image is 0,0 for OpenGL
+    stbi_set_flip_vertically_on_load(1);
 
-    // Step 1: Generate an OpenGL texture ID
-    GLuint textureID;
-    glGenTextures(1, &textureID);
+    auto byteArray = matToBytes(mat);
 
-    // Step 2: Bind the texture
-    glBindTexture(GL_TEXTURE_2D, textureID);
+    t_Buffer = stbi_load_from_memory(byteArray.data(), byteArray.size(), &width, &height, &BPP, 4);
+    if (t_Buffer == nullptr)
+    {
+        std::cout << stbi_failure_reason() << std::endl;
+    }
 
-    // Step 3: Set the texture parameters
+    glGenTextures(1, &id);
+    glBindTexture(GL_TEXTURE_2D, id);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, t_Buffer);
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    // Step 4: Retrieve pixel data from the Mat
-    const unsigned char* imageData = image.data;
+    // S and T are like X and Y for textures.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    // Step 5: Upload pixel data to the OpenGL texture
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.cols, image.rows, 0, GL_BGR, GL_UNSIGNED_BYTE, imageData);
-
-    // Step 6: Unbind the texture
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    if (t_Buffer) {
+        stbi_image_free(t_Buffer);
+    }
+}
+
+std::vector<unsigned char> Texture::matToBytes(cv::Mat image) {
+    std::vector<unsigned char> byteArray;
+    cv::imencode(".png", image, byteArray);
+    return byteArray;
 }
 
 Texture::~Texture()

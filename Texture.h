@@ -12,8 +12,9 @@ class Texture
 {
 public:
 	Texture(const std::string& fileName);
-	Texture(cv::Mat image);
+	Texture(cv::Mat);
 	~Texture();
+	std::vector<unsigned char> matToBytes(cv::Mat image);
 
 	void bind();
 	void unbind();
@@ -23,5 +24,6 @@ private:
 	GLuint id;
 	unsigned char* buffer;
 	int width, height, BPP;
+	unsigned char* t_Buffer;
 
 };
