@@ -65,7 +65,7 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\ComputerVision\P1O2\PropertySheet.props" />
+    <Import Project="..\OpenCV\OpenCV\OpenCV\OpenCV.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -157,18 +157,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FpsCam.cpp" />
+    <ClCompile Include="HUDComponent.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlaneComponent.cpp" />
     <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="tigl.cpp" />
+    <ClCompile Include="Webcam.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FpsCam.h" />
+    <ClInclude Include="HUDComponent.h" />
     <ClInclude Include="PlaneComponent.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="tigl.h" />
+    <ClInclude Include="Webcam.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -24,11 +24,11 @@ void HUDComponent::draw(Texture texture) {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_DEPTH_TEST);
 
-	texture->bind();
+	texture.bind();
 	tigl::shader->enableTexture(true);
 	tigl::drawVertices(GL_QUADS, verts);
 	tigl::shader->enableTexture(false);
-	texture->unbind();
+	texture.unbind();
 
 	glEnable(GL_DEPTH_TEST);
 	unbindHUD();

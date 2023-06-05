@@ -5,7 +5,7 @@
 
 #include "Texture.h"
 #include "Webcam.h"
-#include "PlaneComponent.h"
+#include "HUDComponent.h"
 #include "FpsCam.h"
 #include <string.h>
 #include <opencv2/imgcodecs.hpp>
@@ -23,7 +23,7 @@ using tigl::Vertex;
 GLFWwindow* window;
 
 Texture* texture;
-PlaneComponent *plane;
+HUDComponent *plane;
 FpsCam* camera;
 
 Webcam* webcam;
@@ -78,7 +78,7 @@ void init()
     cv::Mat image = cv::imread(path);
     texture = new Texture(image);
 
-    plane = new PlaneComponent(glm::vec3(4, 0, 4), 1);
+    plane = new HUDComponent(glm::vec3(4, 0, 4), 1);
 }
 
 
