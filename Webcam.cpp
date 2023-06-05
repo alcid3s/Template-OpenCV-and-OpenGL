@@ -16,6 +16,8 @@ Webcam::Webcam()
 	verts.push_back(tigl::Vertex::PT(glm::vec3(width, -height, 0.0f), glm::vec2(1, 0)));
 	verts.push_back(tigl::Vertex::PT(glm::vec3(width, height, 0.0f), glm::vec2(1, 1)));
 	verts.push_back(tigl::Vertex::PT(glm::vec3(-width, height, 0.0f), glm::vec2(0, 1)));
+
+    capture.open(0);
 }
 
 Webcam::~Webcam()
@@ -24,7 +26,6 @@ Webcam::~Webcam()
 
 Texture Webcam::getWebcamFrame()
 {
-    cv::VideoCapture capture(0);
     cv::Mat frame;
     cv::Mat result;
     capture >> frame;

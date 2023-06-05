@@ -25,4 +25,5 @@ protected:
 protected:
 	void cutPerson(cv::Mat& frame, cv::Mat& result);
 	std::vector<unsigned char> matToBytes(cv::Mat image);
+	cv::VideoCapture capture;
 };
