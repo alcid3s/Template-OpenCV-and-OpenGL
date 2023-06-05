@@ -22,7 +22,7 @@ Webcam::Webcam()
 	verts.push_back(tigl::Vertex::PT(glm::vec3(width, height, 0.0f), glm::vec2(1, 1)));
 	verts.push_back(tigl::Vertex::PT(glm::vec3(-width, height, 0.0f), glm::vec2(0, 1)));
 
-    capture = cv::VideoCapture(0);
+    capture.open(0);
 }
 
 Webcam::~Webcam()

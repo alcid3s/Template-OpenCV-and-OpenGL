@@ -5,12 +5,13 @@ using tigl::Vertex;
 
 HUDComponent::HUDComponent(glm::vec3 transform, int textureMultiplier)
 	: textureMultiplier(textureMultiplier) {
-	verts.push_back(Vertex::PT(glm::vec3(-transform.x / 2, 0, -transform.z / 2), glm::vec2(0, 0)));
-	verts.push_back(Vertex::PT(glm::vec3(transform.x / 2, 0, -transform.z / 2), glm::vec2(1 * textureMultiplier, 0)));
-	verts.push_back(Vertex::PT(glm::vec3(transform.x / 2, 0, transform.z / 2), glm::vec2(0, 1 * textureMultiplier)));
-	verts.push_back(Vertex::PT(glm::vec3(-transform.x / 2, 0, transform.z / 2), glm::vec2(1 * textureMultiplier, 1 * textureMultiplier)));
-}
+	float size = std::max(transform.x, transform.z); // Use the maximum dimension as the size
 
+	verts.push_back(Vertex::PT(glm::vec3(-size / 2, 0, -size / 2), glm::vec2(0, 0)));
+	verts.push_back(Vertex::PT(glm::vec3(size / 2, 0, -size / 2), glm::vec2(1 * textureMultiplier, 0)));
+	verts.push_back(Vertex::PT(glm::vec3(size / 2, 0, size / 2), glm::vec2(1 * textureMultiplier, 1 * textureMultiplier)));
+	verts.push_back(Vertex::PT(glm::vec3(-size / 2, 0, size / 2), glm::vec2(0, 1 * textureMultiplier)));
+}
 HUDComponent::~HUDComponent() {
 
 }
