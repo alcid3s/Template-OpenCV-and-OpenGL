@@ -4,8 +4,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Texture.h"
+#include "Webcam.h"
 #include "PlaneComponent.h"
 #include "FpsCam.h"
+#include <string.h>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/videoio.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/video.hpp>
+
 using tigl::Vertex;
 
 #pragma comment(lib, "glfw3.lib")
@@ -17,6 +25,8 @@ GLFWwindow* window;
 Texture* texture;
 PlaneComponent *plane;
 FpsCam* camera;
+
+Webcam* webcam;
 
 void init();
 void update();
@@ -60,9 +70,15 @@ void init()
             glfwSetWindowShouldClose(window, true);
     });
 
+    webcam = new Webcam();
+
     camera = new FpsCam(window);
-    texture = new Texture("image.png");
-    plane = new PlaneComponent(glm::vec3(4, 0, 4), texture, 1);
+
+    std::string path = "resources/test.jpg";
+    cv::Mat image = cv::imread(path);
+    texture = new Texture(image);
+
+    plane = new PlaneComponent(glm::vec3(4, 0, 4), 1);
 }
 
 
@@ -86,5 +102,5 @@ void draw()
 
     glEnable(GL_DEPTH_TEST);
 
-    plane->draw();
+    plane->draw(webcam->getWebcamFrame());
 }

@@ -1,21 +1,27 @@
 #pragma once
 
-#include "tigl.h"
+#include <gl/glew.h>
 #include <string>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/videoio.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/video.hpp>
 
-class Texture {
+class Texture
+{
 public:
-	Texture(const std::string& path);
+	Texture(const std::string& fileName);
+	Texture(cv::Mat image);
 	~Texture();
 
 	void bind();
 	void unbind();
 
-	inline int GetWidth() const { return t_Width; }
-	inline int GetHeight() const { return t_Height; }
+	inline GLuint getId() const { return id; }
 private:
-	unsigned int t_TextureID;
-	std::string t_Path;
-	unsigned char* t_Buffer;
-	int t_Width, t_Height, t_BPP;
+	GLuint id;
+	unsigned char* buffer;
+	int width, height, BPP;
+
 };

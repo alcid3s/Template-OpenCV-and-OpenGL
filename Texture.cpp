@@ -1,49 +1,78 @@
 #include "Texture.h"
-#include "stb_image.h"
 #include <iostream>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/videoio.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/video.hpp>
 
-Texture::Texture(const std::string& path)
-	: t_TextureID(0), t_Path(path), t_Buffer(nullptr),
-	t_Width(0), t_Height(0), t_BPP(0)
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+Texture::Texture(const std::string& fileName) : id(0), buffer(nullptr), width(0), height(0), BPP(0)
 {
-	// flips texture vertically. Bottom left of image is 0,0 for OpenGL
-	stbi_set_flip_vertically_on_load(1);
-	t_Buffer = stbi_load(path.c_str(), &t_Width, &t_Height, &t_BPP, 4);
-	if (t_Buffer == nullptr)
-	{
-		std::cout << stbi_failure_reason() << std::endl;
-	}
+    stbi_set_flip_vertically_on_load(1);
+    buffer = stbi_load(fileName.c_str(), &width, &height, &BPP, 4);
+    if (buffer == nullptr)
+    {
+        std::cout << stbi_failure_reason() << std::endl;
+    }
 
-	glGenTextures(1, &t_TextureID);
-	glBindTexture(GL_TEXTURE_2D, t_TextureID);
+    glGenTextures(1, &id);
+    glBindTexture(GL_TEXTURE_2D, id);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, t_Width, t_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, t_Buffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	// S and T are like X and Y for textures.
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // S and T are like X and Y for textures.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
-	if (t_Buffer) {
-		stbi_image_free(t_Buffer);
-	}
+    if (buffer) {
+        stbi_image_free(buffer);
+    }
+}
+
+Texture::Texture(cv::Mat image) {
+
+    // Step 1: Generate an OpenGL texture ID
+    GLuint textureID;
+    glGenTextures(1, &textureID);
+
+    // Step 2: Bind the texture
+    glBindTexture(GL_TEXTURE_2D, textureID);
+
+    // Step 3: Set the texture parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    // Step 4: Retrieve pixel data from the Mat
+    const unsigned char* imageData = image.data;
+
+    // Step 5: Upload pixel data to the OpenGL texture
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.cols, image.rows, 0, GL_BGR, GL_UNSIGNED_BYTE, imageData);
+
+    // Step 6: Unbind the texture
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 Texture::~Texture()
 {
-	glDeleteTextures(1, &t_TextureID);
+    glDeleteTextures(1, &id);
 }
 
 void Texture::bind()
 {
-	glBindTexture(GL_TEXTURE_2D, t_TextureID);
+    glBindTexture(GL_TEXTURE_2D, id);
 }
 
 void Texture::unbind()
 {
-	glBindTexture(GL_TEXTURE_2D, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }

@@ -9,11 +9,10 @@ class Texture;
 class PlaneComponent {
 	std::vector<Vertex> verts;
 public:
-	PlaneComponent(glm::vec3 transform, Texture* texture, int textureMultiplier = 1);
+	PlaneComponent(glm::vec3 transform, int textureMultiplier = 1);
 	~PlaneComponent();
 
-	void draw();
+	void draw(Texture texture);
 private:
 	int textureMultiplier;
-	Texture* texture;
 };
