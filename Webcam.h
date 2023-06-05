@@ -21,6 +21,7 @@ public:
 protected:
 	Texture* texture;
 	std::vector<tigl::Vertex> verts;
+	cv::VideoCapture capture;
 
 protected:
 	void cutPerson(cv::Mat& frame, cv::Mat& result);
