@@ -6,6 +6,13 @@
 #include "Texture.h"
 #include "PlaneComponent.h"
 #include "FpsCam.h"
+#include <string.h>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/videoio.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/video.hpp>
+
 using tigl::Vertex;
 
 #pragma comment(lib, "glfw3.lib")
@@ -61,7 +68,11 @@ void init()
     });
 
     camera = new FpsCam(window);
-    texture = new Texture("image.png");
+
+    std::string path = "resources/test.jpg";
+    cv::Mat image = cv::imread(path);
+    texture = new Texture(image);
+
     plane = new PlaneComponent(glm::vec3(4, 0, 4), texture, 1);
 }
 
