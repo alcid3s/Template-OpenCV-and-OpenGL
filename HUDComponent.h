@@ -6,13 +6,17 @@ using tigl::Vertex;
 
 class Texture;
 
-class PlaneComponent {
+class HUDComponent {
 	std::vector<Vertex> verts;
 public:
-	PlaneComponent(glm::vec3 transform, int textureMultiplier = 1);
-	~PlaneComponent();
+	HUDComponent(glm::vec3 transform, int textureMultiplier = 1);
+	~HUDComponent();
 
 	void draw(Texture texture);
 private:
 	int textureMultiplier;
+
+private:
+	void bindHUD();
+	void unbindHUD();
 };
