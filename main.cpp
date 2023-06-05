@@ -4,6 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Texture.h"
+#include "Webcam.h"
 #include "PlaneComponent.h"
 #include "FpsCam.h"
 #include <string.h>
@@ -24,6 +25,8 @@ GLFWwindow* window;
 Texture* texture;
 PlaneComponent *plane;
 FpsCam* camera;
+
+Webcam* webcam;
 
 void init();
 void update();
@@ -67,13 +70,15 @@ void init()
             glfwSetWindowShouldClose(window, true);
     });
 
+    webcam = new Webcam();
+
     camera = new FpsCam(window);
 
     std::string path = "resources/test.jpg";
     cv::Mat image = cv::imread(path);
     texture = new Texture(image);
 
-    plane = new PlaneComponent(glm::vec3(4, 0, 4), texture, 1);
+    plane = new PlaneComponent(glm::vec3(4, 0, 4), 1);
 }
 
 
@@ -97,5 +102,5 @@ void draw()
 
     glEnable(GL_DEPTH_TEST);
 
-    plane->draw();
+    plane->draw(webcam->getWebcamFrame());
 }
